@@ -4,6 +4,7 @@ type cell struct {
 	areaBombs  int
 	col, row   int
 	isBomb     bool
+	isDefused  bool
 	isRevealed bool
 	board      Board
 }
@@ -11,6 +12,10 @@ type cell struct {
 // Reveal, reveals the cell's value.
 // Returns (-1) if it's a bomb, and (areaBombs) if it's not a bomb.
 func (c *cell) Reveale() int {
+	if c.isDefused {
+		return 0
+	}
+
 	if c.isBomb {
 		return -1
 	}
@@ -27,7 +32,7 @@ func (c *cell) Reveale() int {
 	return c.areaBombs
 }
 
-// IsRevealed, returns the value of 'isRevealed' property of 'cell' struct.
-func (c *cell) IsRevealed() bool {
-	return c.isRevealed
+// Defuse, changes the 'isDefused' to opposite status of current status every time it's called.
+func (c *cell) Defuse() {
+	c.isDefused = !c.isDefused
 }

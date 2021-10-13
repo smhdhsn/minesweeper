@@ -2,7 +2,6 @@ package game
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/smhdhsn/minesweeper/content"
 	"github.com/smhdhsn/minesweeper/interaction"
@@ -47,9 +46,12 @@ func (b *Board) PlantBomb(bombCount int) {
 
 // Draw, draws the grid for the board.
 func (b *Board) Draw() {
-	for _, row := range *b {
-		str := strings.Repeat("█", len(row)*3) + "█"
-		interaction.Println(str, content.White)
+	interaction.Print(content.Line("▁", len((*b)[0])*3+1), content.Blue)
+	interaction.Print(content.NumberLine(len((*b)[0]), content.BackGroundWhite), content.Blue)
+	for index, row := range *b {
+		if index > 0 {
+			interaction.Print(content.Line("█", len(row)*3+1), content.White)
+		}
 
 		for _, cell := range row {
 			if cell.isRevealed {
@@ -74,13 +76,23 @@ func (b *Board) Draw() {
 				interaction.Print("█ ", content.White)
 				interaction.Print(areaBombs, color)
 			} else {
-				interaction.Print("█▓▓", content.White)
+				var color string
+
+				if cell.isDefused {
+					color = content.Green
+				} else {
+					color = content.White
+				}
+
+				interaction.Print(content.UnrevealedCell(color), "")
 			}
 		}
 
-		interaction.NewLine(content.White + "█")
+		interaction.NewLine(index + 1)
 	}
-	interaction.NewLine(content.White + strings.Repeat("█", len((*b)[0])*3) + "█")
+
+	interaction.Print(content.NumberLine(len((*b)[0]), content.BackGroundWhite), content.Blue)
+	interaction.Print(content.Line("▔", len((*b)[0])*3+1), content.Blue)
 }
 
 // revealeArea, reveals the cells around a given cell with '0' areaBombs.
@@ -102,4 +114,18 @@ func (b *Board) Over() {
 			(*b)[rowIndex][colIndex].Reveale()
 		}
 	}
+}
+
+// IsFullyDefused, checks the whole board to see if all bombs are defused and every other cells are revealed.
+func (b *Board) IsFullyDefused() bool {
+	for rowIndex, row := range *b {
+		for colIndex := range row {
+			cell := (*b)[rowIndex][colIndex]
+			if cell.isBomb && !cell.isDefused || !cell.isBomb && !cell.isRevealed {
+				return false
+			}
+		}
+	}
+
+	return true
 }

@@ -7,8 +7,14 @@ import (
 )
 
 // NewLine, prints a new line.
-func NewLine(str string) {
-	fmt.Printf("%v\n%v", str, content.Reset)
+func NewLine(col int) {
+	var spacing string
+
+	if col <= 9 {
+		spacing += " "
+	}
+
+	fmt.Printf("%v%v%v%v%v%v%v▎%v\n", content.BackGroundWhite, content.Italic, content.Blue, col, spacing, content.Reset, content.Blue, content.Reset)
 }
 
 // Print, prints a presented string.

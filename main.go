@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/smhdhsn/minesweeper/command"
 	"github.com/smhdhsn/minesweeper/content"
 	"github.com/smhdhsn/minesweeper/game"
@@ -21,42 +18,40 @@ func main() {
 	interaction.PrintDialog("Starting the game...", content.Green)
 	command.Clear()
 
-	fmt.Println(play(board, bombs))
+	gameResult := play(board, bombs)
+
+	if gameResult == game.Win {
+		playerWon()
+	} else {
+		playerLost()
+	}
 }
 
+// play, initiates the game process and returns the result.
 func play(board game.Board, bombs int) int {
 	board.PlantBomb(bombs)
 
 	for {
 		board.Draw()
 
-	getRow:
-		row, _ := interaction.PrintInteractiveDialog("Enter row: ", interaction.GetInput)
-		rowOff, err := strconv.ParseInt(row, 0, 10)
-		if err != nil || int(rowOff) > len(board) {
-			interaction.Println("Invalid row number!", content.Red)
-			goto getRow
-		}
+		row, col, option := game.GetAction(board)
 
-	getColumn:
-		col, _ := interaction.PrintInteractiveDialog("Enter column: ", interaction.GetInput)
-		colOff, err := strconv.ParseInt(col, 0, 10)
-		if err != nil || int(colOff) > len(board[0]) {
-			interaction.Println("Invalid column number!", content.Red)
-			goto getColumn
-		}
+		result := game.Execute(board, row, col, option)
 
-		result := board[rowOff-1][colOff-1].Reveale()
-
-		if result == -1 {
-			board.Over()
-			command.Clear()
-			board.Draw()
-			return -1
-		} else if result == 999 {
-			return 0
+		if result == game.GameOver || result == game.Win {
+			return result
 		}
 
 		command.Clear()
 	}
+}
+
+// playerWon, will be executed if player won the game.
+func playerWon() {
+	interaction.PrintDialog(content.Banner("YOU WON"), content.Green)
+}
+
+// playerLost, will be executed if player lost the game.
+func playerLost() {
+	interaction.PrintDialog(content.Banner("YOU LOST"), content.Red)
 }
