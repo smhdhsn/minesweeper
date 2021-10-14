@@ -24,7 +24,7 @@ func RowNumber(col int) {
 		spacing += " "
 	}
 
-	fmt.Printf("%v▕%v%v%v%v", content.Blue, content.BackGroundWhite, spacing, col, content.Reset)
+	fmt.Printf("%v▕%v%v%v%v%v", content.Blue, content.BackGroundWhite, spacing, content.Italic, col, content.Reset)
 }
 
 // Print, prints a presented string.
