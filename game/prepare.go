@@ -52,6 +52,14 @@ func Make(settings map[string]int) (Board, int) {
 
 // GetAction, gets row, column, option from player and returns the result.
 func GetAction(board Board) (int, int, int) {
+getOption:
+	op, _ := interaction.PrintInteractiveDialog("Choose action [1:open, 2:defuse]: ", interaction.GetInput)
+	option, err := strconv.ParseInt(op, 0, 10)
+	if err != nil || option > 2 || option < 1 {
+		interaction.Println("Invalid action!", content.Red)
+		goto getOption
+	}
+
 getRow:
 	row, _ := interaction.PrintInteractiveDialog("Enter row: ", interaction.GetInput)
 	rowOff, err := strconv.ParseInt(row, 0, 10)
@@ -66,14 +74,6 @@ getColumn:
 	if err != nil || int(colOff) > len(board[0]) {
 		interaction.Println("Invalid column number!", content.Red)
 		goto getColumn
-	}
-
-getOption:
-	op, _ := interaction.PrintInteractiveDialog("Enter command[1:open, 2:defuse]: ", interaction.GetInput)
-	option, err := strconv.ParseInt(op, 0, 10)
-	if err != nil || option > 2 || option < 1 {
-		interaction.Println("Invalid command!", content.Red)
-		goto getOption
 	}
 
 	return int(rowOff), int(colOff), int(option)

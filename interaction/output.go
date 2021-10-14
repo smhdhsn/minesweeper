@@ -17,6 +17,16 @@ func NewLine(col int) {
 	fmt.Printf("%v%v%v%v%v%v%v▎%v\n", content.BackGroundWhite, content.Italic, content.Blue, col, spacing, content.Reset, content.Blue, content.Reset)
 }
 
+func RowNumber(col int) {
+	var spacing string
+
+	if col <= 9 {
+		spacing += " "
+	}
+
+	fmt.Printf("%v▕%v%v%v%v", content.Blue, content.BackGroundWhite, spacing, col, content.Reset)
+}
+
 // Print, prints a presented string.
 func Print(str, option string) {
 	fmt.Print(option+str, content.Reset)

@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	font   = "chunky"
+	font = "chunky"
+
 	Reset  = "\033[0m"
 	Italic = "\033[3m"
 
@@ -43,18 +44,47 @@ func DifficultyDialog() string {
 }
 
 // Line, draws a line with given string.
-func Line(str string, count int) string {
+func Line(str string, count, index int) string {
+	color := Blue
+	spacing := " "
 	var endLine string
+	var startLine string
+
 	if str == "█" {
 		endLine += Blue + "▎" + Reset
 	}
 
-	return fmt.Sprintf("%v%v%v%v\n", strings.Repeat(str, count), str, Reset, endLine)
+	if index != 0 {
+		color = White
+		spacing = ""
+		startLine = "▕"
+	}
+
+	return fmt.Sprintf("%v%v%v%v%v%v%v%v\n", spacing, Blue, startLine, color, strings.Repeat(str, count), str, Reset, endLine)
+}
+
+func RevealedCell(color, areaBombs string, col int) string {
+	str := " "
+
+	if col > 0 {
+		str = "█ "
+	}
+
+	// interaction.Print("█ ", content.White)
+	// interaction.Print(areaBombs, color)
+
+	return fmt.Sprintf("%v%v%v%v%v", White, str, areaBombs, color, Reset)
 }
 
 // UnrevealedCell, draws a cell that has not been revealed.
-func UnrevealedCell(color string) string {
-	return fmt.Sprintf("%v█%v▓▓%v", White, color, Reset)
+func UnrevealedCell(color string, col int) string {
+	var str string
+
+	if col > 0 {
+		str = "█"
+	}
+
+	return fmt.Sprintf("%v%v%v▓▓%v", White, str, color, Reset)
 }
 
 // NumberLine, draws a line with numbers inside.
@@ -68,5 +98,5 @@ func NumberLine(count int, background string) string {
 		}
 	}
 
-	return fmt.Sprintf("%v%v%v  %v%v▎\n", BackGroundWhite, Italic, str, Reset, Blue)
+	return fmt.Sprintf("▕%v %v%v  %v%v▎\n", BackGroundWhite, Italic, str, Reset, Blue)
 }
