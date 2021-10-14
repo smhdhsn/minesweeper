@@ -111,7 +111,7 @@ func (b *Board) revealeArea(c *cell) {
 func (b *Board) Over() {
 	for rowIndex, row := range *b {
 		for colIndex := range row {
-			(*b)[rowIndex][colIndex].Reveale()
+			(*b)[rowIndex][colIndex].reveale()
 		}
 	}
 }

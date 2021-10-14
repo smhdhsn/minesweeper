@@ -10,7 +10,7 @@ type cell struct {
 }
 
 // Reveal, reveals the cell's value.
-// Returns (-1) if it's a bomb, and (areaBombs) if it's not a bomb.
+// Returns (-1) if it's a bomb, (0) if it's already defused, and (areaBombs) if it's not a bomb.
 func (c *cell) Reveale() int {
 	if c.isDefused {
 		return 0
@@ -30,6 +30,19 @@ func (c *cell) Reveale() int {
 	}
 
 	return c.areaBombs
+}
+
+// reveale, reveals the cell's value.
+// this function has lack of game logic and it should be used when the game is over.
+func (c *cell) reveale() {
+	if !c.isBomb && !c.isRevealed {
+		c.isRevealed = true
+		c.areaBombs = c.board.countAreaBombs(c)
+
+		if c.areaBombs == 0 {
+			c.board.revealeArea(c)
+		}
+	}
 }
 
 // Defuse, changes the 'isDefused' to opposite status of current status every time it's called.
