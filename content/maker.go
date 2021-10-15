@@ -44,25 +44,11 @@ func DifficultyDialog() string {
 }
 
 // Line, draws a line with given string.
-func Line(str string, count, index int) string {
-	color := Blue
-	spacing := " "
-	var endLine string
-	var startLine string
-
-	if str == "█" {
-		endLine += Blue + "▎" + Reset
-	}
-
-	if index != 0 {
-		color = White
-		spacing = ""
-		startLine = "▕"
-	}
-
-	return fmt.Sprintf("%v%v%v%v%v%v%v%v\n", spacing, Blue, startLine, color, strings.Repeat(str, count), str, Reset, endLine)
+func Line(count int) string {
+	return fmt.Sprintf("%v▕%v%v%v%v▎%v\n", Blue, White, strings.Repeat("█", count*3+3), Reset, Blue, Reset)
 }
 
+// RevealedCell, draws a cell that has been revealed.
 func RevealedCell(color, areaBombs string, col int) string {
 	str := " "
 
@@ -70,10 +56,7 @@ func RevealedCell(color, areaBombs string, col int) string {
 		str = "█ "
 	}
 
-	// interaction.Print("█ ", content.White)
-	// interaction.Print(areaBombs, color)
-
-	return fmt.Sprintf("%v%v%v%v%v", White, str, areaBombs, color, Reset)
+	return fmt.Sprintf("%v%v%v%v%v", White, str, color, areaBombs, Reset)
 }
 
 // UnrevealedCell, draws a cell that has not been revealed.
@@ -87,16 +70,36 @@ func UnrevealedCell(color string, col int) string {
 	return fmt.Sprintf("%v%v%v▓▓%v", White, str, color, Reset)
 }
 
-// NumberLine, draws a line with numbers inside.
-func NumberLine(count int, background string) string {
-	var str string
-
-	for i := 1; i <= count; i++ {
-		str += " " + strconv.FormatInt(int64(i), 10)
+// GridEdge, draws the edge line of the grid.
+func GridEdge(symbol string, length int) string {
+	var numberString string
+	for i := 1; i <= length; i++ {
+		numberString += " " + strconv.FormatInt(int64(i), 10)
 		if i <= 9 {
-			str += " "
+			numberString += " "
 		}
 	}
 
-	return fmt.Sprintf("▕%v %v%v  %v%v▎\n", BackGroundWhite, Italic, str, Reset, Blue)
+	firstLine := fmt.Sprintf(" %v%v%v\n", Blue, strings.Repeat(symbol, length*3+2), symbol)
+	secondLine := fmt.Sprintf("▕%v %v%v  %v%v▎\n", BackGroundWhite, Italic, numberString, Reset, Blue)
+
+	if symbol == "▔" {
+		firstLine, secondLine = secondLine, firstLine
+	}
+
+	return firstLine + secondLine
+}
+
+// RowNumber, draws the number of the row on the edge of the line.
+func RowNumber(symbol string, col int) string {
+	var spacing string
+	if col <= 9 {
+		spacing += " "
+	}
+
+	if symbol == "▎" {
+		return fmt.Sprintf("%v%v%v%v%v%v%v▎%v\n", BackGroundWhite, Italic, Blue, col, spacing, Reset, Blue, Reset)
+	}
+
+	return fmt.Sprintf("%v▕%v%v%v%v%v", Blue, BackGroundWhite, spacing, Italic, col, Reset)
 }

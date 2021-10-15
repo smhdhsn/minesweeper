@@ -21,7 +21,7 @@ func main() {
 	gameResult := play(board, bombs)
 
 	if gameResult == game.Win {
-		playerWon()
+		playerWin()
 	} else {
 		playerLost()
 	}
@@ -46,12 +46,12 @@ func play(board game.Board, bombs int) int {
 	}
 }
 
-// playerWon, will be executed if player won the game.
-func playerWon() {
+// playerWin, will be executed if player won the game.
+func playerWin() {
 	interaction.PrintDialog(content.Banner("YOU WON"), content.Green)
 }
 
 // playerLost, will be executed if player lost the game.
 func playerLost() {
-	interaction.PrintDialog(content.Banner("YOU LOST"), content.Red)
+	interaction.PrintDialog(content.Banner("YOU LOSE"), content.Red)
 }

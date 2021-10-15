@@ -46,15 +46,14 @@ func (b *Board) PlantBomb(bombCount int) {
 
 // Draw, draws the grid for the board.
 func (b *Board) Draw() {
-	interaction.Print(content.Line("▁", len((*b)[0])*3+2, 0), content.Blue)
-	interaction.Print(content.NumberLine(len((*b)[0]), content.BackGroundWhite), content.Blue)
 	for index, row := range *b {
-		if index > 0 {
-			interaction.Print(content.Line("█", len(row)*3+2, index), content.White)
+		if index == 0 {
+			interaction.Print(content.GridEdge("▁", len(row)), content.Blue)
+		} else {
+			interaction.Print(content.Line(len(row)), content.White)
 		}
 
-		interaction.RowNumber(index + 1)
-
+		interaction.Print(content.RowNumber("▕", index+1), "")
 		for col, cell := range row {
 			if cell.isRevealed {
 				var color string
@@ -64,7 +63,7 @@ func (b *Board) Draw() {
 				case 9, 8, 7:
 					color = content.Red
 				case 6, 5, 4:
-					color = content.Yellow
+					color = content.Purple
 				case 3, 2, 1, 0:
 					color = content.White
 				}
@@ -88,12 +87,13 @@ func (b *Board) Draw() {
 				interaction.Print(content.UnrevealedCell(color, col), "")
 			}
 		}
+		interaction.Print(content.RowNumber("▎", index+1), "")
 
-		interaction.NewLine(index + 1)
+		if index == len(*b)-1 {
+			interaction.Print(content.GridEdge("▔", len(row)), content.Blue)
+		}
 	}
 
-	interaction.Print(content.NumberLine(len((*b)[0]), content.BackGroundWhite), content.Blue)
-	interaction.Print(content.Line("▔", len((*b)[0])*3+2, 0), content.Blue)
 }
 
 // revealeArea, reveals the cells around a given cell with '0' areaBombs.
